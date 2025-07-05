@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+transformers
+torch
+tokenizers
+accelerate
+pydantic
+python-multipart
+PyYAML
+numpy
+safetensors
+huggingface-hub
+sentencepiece
+protobuf

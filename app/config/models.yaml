@@ -1,0 +1,174 @@
+# Model Registry Configuration
+models:
+  # === Small Conversational Models ===
+  dialogpt-small:
+    name: "microsoft/DialoGPT-small"
+    type: "conversational"
+    size: "117M"
+    description: "Small conversational model for chat applications"
+    max_length: 1000
+    suggested_temperature: 0.7
+
+  dialogpt-medium:
+    name: "microsoft/DialoGPT-medium"
+    type: "conversational"
+    size: "345M"
+    description: "Medium conversational model with better responses"
+    max_length: 1000
+    suggested_temperature: 0.7
+
+  # === Text Generation Models ===
+  gpt2-small:
+    name: "gpt2"
+    type: "text"
+    size: "124M"
+    description: "GPT-2 small model for general text generation"
+    max_length: 1024
+    suggested_temperature: 0.8
+
+  distilgpt2:
+    name: "distilgpt2"
+    type: "text"
+    size: "82M"
+    description: "Distilled GPT-2 model - faster and smaller"
+    max_length: 1024
+    suggested_temperature: 0.8
+
+  gpt2-medium:
+    name: "gpt2-medium"
+    type: "text"
+    size: "345M"
+    description: "GPT-2 medium model for better text quality"
+    max_length: 1024
+    suggested_temperature: 0.8
+
+  # === Code Generation Models ===
+  codegen-350m:
+    name: "Salesforce/codegen-350M-mono"
+    type: "code"
+    size: "350M"
+    description: "Code generation model for Python/programming"
+    max_length: 2048
+    suggested_temperature: 0.2
+
+  codegen-2b:
+    name: "Salesforce/codegen-2B-mono"
+    type: "code"
+    size: "2B"
+    description: "Larger code generation model"
+    max_length: 2048
+    suggested_temperature: 0.2
+
+  # === Instruction Following Models ===
+  flan-t5-small:
+    name: "google/flan-t5-small"
+    type: "instruction"
+    size: "80M"
+    description: "Small instruction-following model"
+    max_length: 512
+    suggested_temperature: 0.3
+
+  flan-t5-base:
+    name: "google/flan-t5-base"
+    type: "instruction"
+    size: "250M"
+    description: "Base instruction-following model"
+    max_length: 512
+    suggested_temperature: 0.3
+
+  # === Lightweight Models ===
+  opt-125m:
+    name: "facebook/opt-125m"
+    type: "text"
+    size: "125M"
+    description: "OPT 125M parameter model"
+    max_length: 2048
+    suggested_temperature: 0.8
+
+  opt-350m:
+    name: "facebook/opt-350m"
+    type: "text"
+    size: "350M"
+    description: "OPT 350M parameter model"
+    max_length: 2048
+    suggested_temperature: 0.8
+
+  # === Specialized Models ===
+  pythia-160m:
+    name: "EleutherAI/pythia-160m"
+    type: "text"
+    size: "160M"
+    description: "Pythia model for text generation"
+    max_length: 2048
+    suggested_temperature: 0.8
+
+  bloom-560m:
+    name: "bigscience/bloom-560m"
+    type: "text"
+    size: "560M"
+    description: "BLOOM multilingual model"
+    max_length: 1024
+    suggested_temperature: 0.8
+
+  # === GATED MODELS (Require HF_TOKEN) ===
+  llama-3.2-1b:
+    name: "meta-llama/Llama-3.2-1B"
+    type: "text"
+    size: "1B"
+    description: "Llama 3.2 1B model (GATED - requires HF token)"
+    max_length: 2048
+    suggested_temperature: 0.7
+    gated: true
+
+  llama-3.2-3b:
+    name: "meta-llama/Llama-3.2-3B"
+    type: "text"
+    size: "3B"
+    description: "Llama 3.2 3B model (GATED - requires HF token)"
+    max_length: 2048
+    suggested_temperature: 0.7
+    gated: true
+
+  llama-3.2-1b-instruct:
+    name: "meta-llama/Llama-3.2-1B-Instruct"
+    type: "instruction"
+    size: "1B"
+    description: "Llama 3.2 1B Instruct model (GATED - requires HF token)"
+    max_length: 2048
+    suggested_temperature: 0.6
+    gated: true
+
+  # === Other Gated Models ===
+  gemma-2b:
+    name: "google/gemma-2b"
+    type: "text"
+    size: "2B"
+    description: "Gemma 2B model (GATED - requires HF token)"
+    max_length: 8192
+    suggested_temperature: 0.7
+    gated: true
+
+# System Settings
+settings:
+  # Memory Management
+  max_concurrent_models: 3
+  auto_unload_after_minutes: 30
+  memory_cleanup_interval_minutes: 5
+  
+  # Model Loading
+  default_device: "auto"
+  cache_dir: "/app/.cache/huggingface"
+  low_cpu_mem_usage: true
+  torch_dtype: "auto"
+  
+  # Performance
+  use_fast_tokenizer: true
+  trust_remote_code: false
+  
+  # API Settings
+  default_max_length: 100
+  max_batch_size: 4
+  
+  # Logging
+  log_level: "INFO"
+  log_model_loading: true

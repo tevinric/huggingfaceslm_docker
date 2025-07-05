@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  huggingface-multi-api:
+    build: .
+    container_name: huggingface-multi-api
+    ports:
+      - "8000:8000"
+    environment:
+      # Model Configuration
+      - DEFAULT_MODEL=distilgpt2
+      - MAX_CONCURRENT_MODELS=3
+      - AUTO_UNLOAD_MINUTES=30
+      
+      # API Configuration
+      - API_KEY=${API_KEY:-}
+      - CORS_ORIGINS=*
+      - LOG_LEVEL=INFO
+      
+      # Hugging Face Configuration
+      - HF_HOME=/app/.cache/huggingface
+      - TRANSFORMERS_CACHE=/app/.cache/huggingface
+      - HF_TOKEN=${HF_TOKEN:-}  # For gated models
+      
+      # Performance
+      - WORKERS=1
+
+      - NVIDIA_VISIBLE_DEVICES=all
+      
+    volumes:
+      # Model cache (persistent)
+      - ./models_cache:/app/.cache/huggingface
+      # Logs
+      - ./logs:/app/logs
+      # Configuration (for easy editing)
+      - ./app/config:/app/app/config
+      
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+        reservations:
+          memory: 2G
+
+  # Optional: Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - huggingface-multi-api
+    restart: unless-stopped
+    profiles:
+      - with-proxy
+
+networks:
+  default:
+    name: huggingface-api-network

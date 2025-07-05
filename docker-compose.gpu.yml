@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  huggingface-multi-api:
+    build: .
+    container_name: huggingface-multi-api-gpu
+    ports:
+      - "8000:8000"
+    environment:
+      # Model Configuration
+      - DEFAULT_MODEL=distilgpt2
+      - MAX_CONCURRENT_MODELS=2  # Fewer for GPU memory
+      - AUTO_UNLOAD_MINUTES=30
+      
+      # API Configuration
+      - API_KEY=${API_KEY:-}
+      - CORS_ORIGINS=*
+      - LOG_LEVEL=INFO
+      
+      # Hugging Face Cache
+      - HF_HOME=/app/.cache/huggingface
+      - TRANSFORMERS_CACHE=/app/.cache/huggingface
+      
+      # GPU Configuration
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+      
+      # Performance
+      - WORKERS=1
+      
+    volumes:
+      # Model cache (persistent)
+      - ./models_cache:/app/.cache/huggingface
+      # Logs
+      - ./logs:/app/logs
+      # Configuration (for easy editing)
+      - ./app/config:/app/app/config
+      
+    restart: unless-stopped
+    
+    # GPU Runtime
+    runtime: nvidia
+    
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+      
+    # GPU reservations (Docker Compose 3.8+)
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+networks:
+  default:
+    name: huggingface-api-gpu-network
